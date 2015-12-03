@@ -1,0 +1,7 @@
+#!/usr/bin/env osascript
+
+on run
+	tell application "Safari" to quit
+	do shell script "mv \"/Library/Internet Plug-Ins/o1dbrowserplugin.plugin\" \"/Library/Internet Plug-Ins/googletalkbrowserplugin.plugin\" \"/Users/skaufman/Disabled Plug-Ins/\" || true" with administrator privileges
+	tell application "Safari" to activate
+end run
