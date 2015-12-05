@@ -1,6 +1,13 @@
 #!/bin/bash
 
 echo "**************"
+echo "*** Killing CS5 Service Manager"
+echo "*** begin "
+for i in `ps auxwww | grep -i "CS5ServiceManager.app" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; kill -9 $i; done
+echo "*** end "
+echo "**************"
+
+echo "**************"
 echo "*** Killing Adobe Desktop Service"
 echo "*** begin "
 for i in `ps auxwww | grep -i "Adobe Desktop Service" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; kill -9 $i; done
