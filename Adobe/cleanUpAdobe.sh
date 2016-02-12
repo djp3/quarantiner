@@ -1,6 +1,14 @@
 #!/bin/bash
 
 echo "**************"
+echo "*** Creating a dummy folder for adobe to delete "
+echo "**** Rationale : https://backblaze.zendesk.com/entries/98786348"
+echo "*** begin "
+sudo mkdir /.Adobe_will_delete_because_https___goo.gl_ZVJgCB
+echo "*** end "
+echo "**************"
+
+echo "**************"
 echo "*** Killing CS5 Service Manager"
 echo "*** begin "
 for i in `ps auxwww | grep -i "CS5ServiceManager.app" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; kill -9 $i; done
