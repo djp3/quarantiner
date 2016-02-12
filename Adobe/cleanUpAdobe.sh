@@ -67,3 +67,10 @@ for i in `ps auxwww | grep -i "Adobe" | grep -v grep | grep -v "cleanUpAdobe" | 
 for i in `ps auxwww | grep -i "Core Sync" | grep -v grep | grep -v "cleanUpAdobe" | tr -s " " | cut -d' ' -f2`; do ps auxwww -u $i | tail -n 1; done
 echo "*** end "
 echo "**************"
+
+echo "**************"
+echo "*** Consider editting any files below that have RunAtLoad true to RunAtLoad false "
+echo "*** begin "
+for i in `ls  /Library/LaunchAgents/com.adobe.*`;do echo;echo $i;grep -A 1 RunAtLoad $i;done
+echo "*** end "
+echo "**************"
