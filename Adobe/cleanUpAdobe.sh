@@ -10,6 +10,43 @@ echo "*** end "
 echo "**************"
 
 echo "**************"
+echo "*** Killing Adobe Application Manager stuff"
+echo "*** begin "
+for i in `ps auxwww | grep -i "AAM Updates Notifier.app" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; kill -9 $i; done
+for i in `ps auxwww | grep -i "Adobe Application Manager" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; kill -9 $i; done
+for i in `ps auxwww | grep "Adobe" | grep -i "UpdaterStartupUtility" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; kill -9 $i; done
+
+echo "Soft Kill"
+for i in `ps auxwww | grep -i "com.adobe.ARMDC" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
+sleep 1
+
+echo "Hard Kill"
+for i in `ps auxwww | grep -i "com.adobe.ARMDC" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
+sleep 1
+echo "*** end "
+echo "**************"
+
+
+echo "**************"
+echo "*** Killing AGSService"
+echo "*** begin "
+echo "Soft Kill"
+for i in `ps auxwww | grep -i "AGSService" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
+sleep 1
+echo "Hard Kill"
+for i in `ps auxwww | grep -i "AGSService" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
+sleep 1
+echo "*** end "
+echo "**************"
+
+echo "**************"
+echo "*** Killing AdobeGCClient"
+echo "*** begin "
+for i in `ps auxwww | grep -i "AdobeGCClient.app" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; kill -9 $i; done
+echo "*** end "
+echo "**************"
+
+echo "**************"
 echo "*** Killing CS5 Service Manager"
 echo "*** begin "
 for i in `ps auxwww | grep -i "CS5ServiceManager.app" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; kill -9 $i; done
