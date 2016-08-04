@@ -95,6 +95,13 @@ for i in `ps auxwww | grep -i "Adobe Installer" | grep -v grep | tr -s " " | cut
 echo "*** end "
 echo "**************"
 
+echo "**************"
+echo "*** Killing Adobe Update Daemon"
+echo "*** begin "
+for i in `ps auxwww | grep -i "AdobeUpdateDaemon" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
+echo "*** end "
+echo "**************"
+
 echo
 echo
 
