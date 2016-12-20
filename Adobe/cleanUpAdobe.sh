@@ -8,6 +8,8 @@ sudo mkdir /.Adobe_will_delete_because_https___goo.gl_ZVJgCB
 sudo mkdir ~/.Adobe_will_delete_because_https___goo.gl_ZVJgCB
 echo "*** end "
 echo "**************"
+echo "Turn off  Extensions->Finder->Core Sync in System Preferences"
+echo " as per http://apple.stackexchange.com/questions/236577/how-to-disable-adobe-core-sync-app-on-os-x-from-being-launched-automatically"
 
 echo "**************"
 echo "*** Killing Adobe Application Manager stuff"
