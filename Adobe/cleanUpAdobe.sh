@@ -12,6 +12,23 @@ echo "Turn off  Extensions->Finder->Core Sync in System Preferences"
 echo " as per http://apple.stackexchange.com/questions/236577/how-to-disable-adobe-core-sync-app-on-os-x-from-being-launched-automatically"
 
 echo "**************"
+echo "*** Killing Adobe Acrobat Pro"
+echo "*** begin "
+
+echo "Soft Kill"
+for i in `ps auxwww | grep -i "Adobe Acrobat.app" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
+for i in `ps auxwww | grep -i "AcroCEF helper.app" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
+for i in `ps auxwww | grep -i "AcroCEF.app" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
+sleep 1
+
+echo "Hard Kill"
+for i in `ps auxwww | grep -i "Adobe Acrobat.app" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
+for i in `ps auxwww | grep -i "AcroCEF helper.app" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
+for i in `ps auxwww | grep -i "AcroCEF.app" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
+echo "*** end "
+echo "**************"
+
+echo "**************"
 echo "*** Killing Adobe Application Manager stuff"
 echo "*** begin "
 for i in `ps auxwww | grep -i "AAM Updates Notifier.app" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; kill -9 $i; done
