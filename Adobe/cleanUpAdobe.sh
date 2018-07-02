@@ -1,6 +1,11 @@
 #!/bin/bash
 
 echo "**************"
+echo "Loading sudo password"
+sudo echo "ok"
+echo "**************"
+
+echo "**************"
 echo "*** Creating a dummy folder for adobe to delete "
 echo "**** Rationale : https://backblaze.zendesk.com/entries/98786348"
 echo "*** begin "
@@ -12,9 +17,18 @@ echo "Turn off  Extensions->Finder->Core Sync in System Preferences"
 echo " as per http://apple.stackexchange.com/questions/236577/how-to-disable-adobe-core-sync-app-on-os-x-from-being-launched-automatically"
 
 echo "**************"
-echo "*** Killing Adobe Acrobat Pro"
+echo "*** Removing updaters from LaunchAgents"
 echo "*** begin "
 
+pushd .
+cd ~/Library/LaunchAgents
+for i in AAM ARM GC; do echo "removing" `basename com.adobe.$i.* .plist`; launchctl remove `basename com.adobe.$i.* .plist`; rm com.adobe.$i.*;done
+popd 
+
+
+echo "**************"
+echo "*** Killing Adobe Acrobat Pro"
+echo "*** begin "
 echo "Soft Kill"
 for i in `ps auxwww | grep -i "Adobe Acrobat.app" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
 for i in `ps auxwww | grep -i "AcroCEF helper.app" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
@@ -167,6 +181,7 @@ for i in `ps auxwww | grep -i "Acrobat Update Helper" | grep -v grep | tr -s " "
 echo "*** end "
 echo "**************"
 
+
 echo
 echo
 
@@ -184,3 +199,4 @@ echo "*** begin "
 for i in `ls  /Library/LaunchAgents/com.adobe.*`;do echo;echo $i;grep -A 1 RunAtLoad $i;done
 echo "*** end "
 echo "**************"
+sleep 10
