@@ -22,7 +22,12 @@ echo "*** begin "
 
 pushd .
 cd ~/Library/LaunchAgents
-for i in AAM ARM GC; do echo "removing" `basename com.adobe.$i.* .plist`; launchctl remove `basename com.adobe.$i.* .plist`; rm com.adobe.$i.*;done
+for i in AAM ARM ARMDCHelper AdobeCreativeCloud GC; do echo "removing" `basename com.adobe.$i.* .plist`; launchctl remove `basename com.adobe.$i.* .plist`; rm com.adobe.$i.*;done
+popd 
+
+pushd .
+cd /Library/LaunchAgents
+for i in AAM ARM ARMDCHelper AdobeCreativeCloud GC; do echo "removing" `basename com.adobe.$i.* .plist`; launchctl remove `basename com.adobe.$i.* .plist`; sudo rm com.adobe.$i.*;done
 popd 
 
 
