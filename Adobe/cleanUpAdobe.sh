@@ -75,6 +75,20 @@ for i in `ps auxwww | grep -i "AGSService" | grep -v grep | tr -s " " | cut -d' 
 echo "*** end "
 echo "**************"
 
+
+echo "**************"
+echo "*** Killing AGMService"
+echo "*** begin "
+echo "Soft Kill"
+for i in `ps auxwww | grep -i "AGMService" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
+sleep 1
+echo "Hard Kill"
+for i in `ps auxwww | grep -i "AGMService" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
+echo "*** end "
+echo "**************"
+
+
+
 echo "**************"
 echo "*** Killing AdobeGCClient"
 echo "*** begin "
