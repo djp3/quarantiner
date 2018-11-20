@@ -200,6 +200,28 @@ for i in `ps auxwww | grep -i "Acrobat Update Helper" | grep -v grep | tr -s " "
 echo "*** end "
 echo "**************"
 
+echo "**************"
+echo "*** Killing Acrobat Creative Cloud Helper"
+echo "*** begin "
+echo "Soft Kill"
+for i in `ps auxwww | grep -i "com.adobe.acc.installer.v2" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
+sleep 1
+echo "Hard Kill"
+for i in `ps auxwww | grep -i "com.adobe.acc.installer.v2" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
+echo "*** end "
+echo "**************"
+
+echo "**************"
+echo "*** Creative Cloud Libraries apps "
+echo "*** begin "
+echo "Soft Kill"
+for i in `ps auxwww | grep -i "Adobe.Creative Cloud Libraries" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
+sleep 1
+echo "Hard Kill"
+for i in `ps auxwww | grep -i "Adobe.Creative Cloud Libraries" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
+echo "*** end "
+echo "**************"
+
 
 echo
 echo
