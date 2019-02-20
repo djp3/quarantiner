@@ -1,16 +1,30 @@
 #!/bin/bash
+ECHO=/bin/echo
+FIND=/usr/bin/find
+ID=/usr/bin/id
+RM=/bin/rm
+KILL=/bin/kill
+SLEEP=/bin/sleep
 
 echo "**************"
-echo "Loading sudo password"
-sudo echo "ok"
+echo "Check if you are running as root "
+$ECHO -n "Running as root"
+if [ `$ID -u` = 0 ]
+	then 
+                $ECHO "...ok"
+        else
+		 $ECHO "...failed. Exiting..."
+		 exit 1
+fi 
 echo "**************"
+
 
 echo "**************"
 echo "*** Creating a dummy folder for adobe to delete "
 echo "**** Rationale : https://backblaze.zendesk.com/entries/98786348"
 echo "*** begin "
-sudo mkdir /.Adobe_will_delete_because_https___goo.gl_ZVJgCB
-sudo mkdir ~/.Adobe_will_delete_because_https___goo.gl_ZVJgCB
+mkdir /.Adobe_will_delete_because_https___goo.gl_ZVJgCB
+mkdir ~/.Adobe_will_delete_because_https___goo.gl_ZVJgCB
 echo "*** end "
 echo "**************"
 echo "Turn off  Extensions->Finder->Core Sync in System Preferences"
@@ -22,230 +36,97 @@ echo "*** begin "
 
 pushd . > /dev/null
 cd ~/Library/LaunchAgents
-for i in AAM ARM ARMDCHelper AdobeCreativeCloud GC;
+for i in AAM ARM ARMDCHelper AdobeCreativeCloud GC ARMDC agsservice;
 	do 
-		if compgen -G `basename com.adobe.$i.* .plist` > /dev/null; then
+		if compgen -G `basename com.adobe.$i.*.plist` > /dev/null; then
 			# "Some files exist."
-			echo "removing" `basename com.adobe.$i.* .plist`;
-			launchctl remove `basename com.adobe.$i.* .plist`;
-			rm com.adobe.$i.*;
+			echo "removing" `basename com.adobe.$i.*.plist`;
+			$RM com.adobe.$i.*;
+			#launchctl remove `basename com.adobe.$i.*`;
+		fi
+		if compgen -G `basename com.adobe.$i.plist` > /dev/null; then
+			# "Some files exist."
+			echo "removing" `basename com.adobe.$i.plist`;
+			$RM com.adobe.$i.*;
+			#launchctl remove `basename com.adobe.$i.*`;
 		fi
 	done
 popd  > /dev/null
 
 pushd . > /dev/null
 cd /Library/LaunchAgents
-for i in AAM ARM ARMDCHelper AdobeCreativeCloud GC;
+for i in AAM ARM ARMDCHelper AdobeCreativeCloud GC ARMDC agsservice;
 	do 
-		if compgen -G `basename com.adobe.$i.* .plist` > /dev/null; then
+		if compgen -G `basename com.adobe.$i.*.plist` > /dev/null; then
 			# "Some files exist."
-			echo "removing" `basename com.adobe.$i.* .plist`;
-			launchctl remove `basename com.adobe.$i.* .plist`;
-			rm com.adobe.$i.*;
+			echo "removing" `basename com.adobe.$i.*.plist`;
+			$RM com.adobe.$i.*;
+			#launchctl remove `basename com.adobe.$i.*`;
+		fi
+		if compgen -G `basename com.adobe.$i.plist` > /dev/null; then
+			# "Some files exist."
+			echo "removing" `basename com.adobe.$i.plist`;
+			$RM com.adobe.$i.*;
+			#launchctl remove `basename com.adobe.$i.*`;
+		fi
+	done
+popd  > /dev/null
+
+pushd . > /dev/null
+cd /Library/LaunchDaemons
+for i in AAM ARM ARMDCHelper AdobeCreativeCloud GC ARMDC agsservice;
+	do 
+		if compgen -G `basename com.adobe.$i.*.plist` > /dev/null; then
+			# "Some files exist."
+			echo "removing" `basename com.adobe.$i.*.plist`;
+			$RM com.adobe.$i.*;
+			#launchctl remove `basename com.adobe.$i.*`;
+		fi
+
+		if compgen -G `basename com.adobe.$i.plist` > /dev/null; then
+			# "Some files exist."
+			echo "removing" `basename com.adobe.$i.plist`;
+			$RM com.adobe.$i.*;
+			#launchctl remove `basename com.adobe.$i.*`;
 		fi
 	done
 popd  > /dev/null
 
 echo "**************"
-echo "*** Removing items installed in launchctl"
+echo "*** Removing items installed in launchctl with adobe name"
 echo "*** begin "
 
 pushd . > /dev/null
-for i in `launchctl list | grep adobe | cut -f 3`; do echo $i; launchctl remove $i;done;
+for i in `launchctl list | grep adobe | cut -f 3`;
+	do 
+		echo $i;
+		launchctl remove $i;
+	done;
 popd > /dev/null
 
 
-echo "**************"
-echo "*** Killing Adobe Acrobat Pro"
-echo "*** begin "
-echo "Soft Kill"
-for i in `ps auxwww | grep -i "Adobe Acrobat.app" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
-for i in `ps auxwww | grep -i "AcroCEF helper.app" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
-for i in `ps auxwww | grep -i "AcroCEF.app" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
-sleep 1
+echo "Staged Kill"
+#List problematic apps
+for k in "Adobe Acrobat.app" "AcroCEF helper.app" "AcroCEF.app" "AAM Updates Notifier.app" "Adobe Application Manager" "AdobeUpdaterStartupUtility" "com.adobe.ARMDC" "AGSService" "AGMService" "AdobeGCClient.app" "CS5ServiceManager.app" "Adobe Desktop Service" "Core Sync" "AdobeIPC" "Adobe Crash Reporter" "Adobe Creative Cloud.*js$" "Adobe Installer" "AdobeUpdateDaemon" "Acrobat Update Helper" "Adobe.Creative Cloud Libraries" "com.adobe.acc.installer.v2";
+	do
+		echo "*** Targetting " $k
+		#Get PIDs
+		for i in `ps auxwww | grep -i "$k" | grep -v grep | tr -s " " | cut -d' ' -f2`;
+			do
+				echo -n "*** *** Soft kill: " $i;
+				$KILL $i > /dev/null;
+				echo -n "... Sleeping 5 seconds"
+				$SLEEP 5;
 
-echo "Hard Kill"
-for i in `ps auxwww | grep -i "Adobe Acrobat.app" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
-for i in `ps auxwww | grep -i "AcroCEF helper.app" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
-for i in `ps auxwww | grep -i "AcroCEF.app" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
-echo "*** end "
-echo "**************"
-
-echo "**************"
-echo "*** Killing Adobe Application Manager stuff"
-echo "*** begin "
-for i in `ps auxwww | grep -i "AAM Updates Notifier.app" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; kill -9 $i; done
-for i in `ps auxwww | grep -i "Adobe Application Manager" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; kill -9 $i; done
-for i in `ps auxwww | grep "Adobe" | grep -i "UpdaterStartupUtility" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; kill -9 $i; done
-
-echo "Soft Kill"
-for i in `ps auxwww | grep -i "com.adobe.ARMDC" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
-sleep 1
-
-echo "Hard Kill"
-for i in `ps auxwww | grep -i "com.adobe.ARMDC" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
-echo "*** end "
-echo "**************"
-
-
-echo "**************"
-echo "*** Killing AGSService"
-echo "*** begin "
-echo "Soft Kill"
-for i in `ps auxwww | grep -i "AGSService" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
-sleep 1
-echo "Hard Kill"
-for i in `ps auxwww | grep -i "AGSService" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
-echo "*** end "
-echo "**************"
-
-
-echo "**************"
-echo "*** Killing AGMService"
-echo "*** begin "
-echo "Soft Kill"
-for i in `ps auxwww | grep -i "AGMService" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
-sleep 1
-echo "Hard Kill"
-for i in `ps auxwww | grep -i "AGMService" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
-echo "*** end "
-echo "**************"
-
-
-
-echo "**************"
-echo "*** Killing AdobeGCClient"
-echo "*** begin "
-echo "Soft Kill"
-for i in `ps auxwww | grep -i "AdobeGCClient.app" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
-sleep 1
-echo "Hard Kill"
-for i in `ps auxwww | grep -i "AdobeGCClient.app" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
-echo "*** end "
-echo "**************"
-
-echo "**************"
-echo "*** Killing CS5 Service Manager"
-echo "*** begin "
-echo "Soft Kill"
-for i in `ps auxwww | grep -i "CS5ServiceManager.app" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
-sleep 1
-echo "Hard Kill"
-for i in `ps auxwww | grep -i "CS5ServiceManager.app" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
-echo "*** end "
-echo "**************"
-
-echo "**************"
-echo "*** Killing Adobe Desktop Service"
-echo "*** begin "
-echo "Soft Kill"
-for i in `ps auxwww | grep -i "Adobe Desktop Service" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
-sleep 1
-echo "Hard Kill"
-for i in `ps auxwww | grep -i "Adobe Desktop Service" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
-echo "*** end "
-echo "**************"
-
-echo "**************"
-echo "*** Killing Core Sync"
-echo "*** begin "
-echo "Soft Kill"
-for i in `ps auxwww | grep -i "Core Sync" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
-sleep 1
-echo "Hard Kill"
-for i in `ps auxwww | grep -i "Core Sync" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
-echo "*** end "
-echo "**************"
-
-echo "**************"
-echo "*** Killing AdobeIPC"
-echo "*** begin "
-echo "Soft Kill"
-for i in `ps auxwww | grep -i "AdobeIPC" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
-sleep 1
-echo "Hard Kill"
-for i in `ps auxwww | grep -i "AdobeIPC" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
-echo "*** end "
-echo "**************"
-
-echo "**************"
-echo "*** Killing Adobe Crash Reporter"
-echo "*** begin "
-echo "Soft Kill"
-for i in `ps auxwww | grep -i "Adobe Crash Reporter" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
-sleep 1
-echo "Hard Kill"
-for i in `ps auxwww | grep -i "Adobe Crash Reporter" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
-echo "*** end "
-echo "**************"
-
-echo "**************"
-echo "*** Killing Adobe javascript"
-echo "*** begin "
-echo "Soft Kill"
-for i in `ps auxwww | grep -i "Adobe Creative Cloud.*js$" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
-sleep 1
-echo "Hard Kill"
-for i in `ps auxwww | grep -i "Adobe Creative Cloud.*js$" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
-echo "*** end "
-echo "**************"
-
-echo "**************"
-echo "*** Killing Adobe installer"
-echo "*** begin "
-echo "Soft Kill"
-for i in `ps auxwww | grep -i "Adobe Installer" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
-sleep 1
-echo "Hard Kill"
-for i in `ps auxwww | grep -i "Adobe Installer" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
-echo "*** end "
-echo "**************"
-
-
-echo "**************"
-echo "*** Killing Adobe Update Daemon"
-echo "*** begin "
-echo "Soft Kill"
-for i in `ps auxwww | grep -i "AdobeUpdateDaemon" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
-sleep 1
-echo "Hard Kill"
-for i in `ps auxwww | grep -i "AdobeUpdateDaemon" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
-echo "*** end "
-echo "**************"
-
-echo "**************"
-echo "*** Killing Acrobat Update Helper"
-echo "*** begin "
-echo "Soft Kill"
-for i in `ps auxwww | grep -i "Acrobat Update Helper" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
-sleep 1
-echo "Hard Kill"
-for i in `ps auxwww | grep -i "Acrobat Update Helper" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
-echo "*** end "
-echo "**************"
-
-echo "**************"
-echo "*** Killing Acrobat Creative Cloud Helper"
-echo "*** begin "
-echo "Soft Kill"
-for i in `ps auxwww | grep -i "com.adobe.acc.installer.v2" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
-sleep 1
-echo "Hard Kill"
-for i in `ps auxwww | grep -i "com.adobe.acc.installer.v2" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
-echo "*** end "
-echo "**************"
-
-echo "**************"
-echo "*** Creative Cloud Libraries apps "
-echo "*** begin "
-echo "Soft Kill"
-for i in `ps auxwww | grep -i "Adobe.Creative Cloud Libraries" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill $i; done
-sleep 1
-echo "Hard Kill"
-for i in `ps auxwww | grep -i "Adobe.Creative Cloud Libraries" | grep -v grep | tr -s " " | cut -d' ' -f2`; do echo "   " $i; sudo kill -9 $i; done
-echo "*** end "
-echo "**************"
-
+				#Check to see if it's still going
+				for j in `ps auxwww $i | grep -v "^USER"`;
+					do	
+						echo -n "... Hard kill: " $j
+						$KILL -9 $i;
+					done
+				echo "...Done"
+			done
+	done
 
 echo
 echo
@@ -255,6 +136,15 @@ echo "*** Listing Processes that might be relevant that are still running"
 echo "*** begin "
 for i in `ps auxwww | grep -i "Adobe" | grep -v grep | grep -v "cleanUpAdobe" | tr -s " " | cut -d' ' -f2`; do ps auxwww -u $i | tail -n 1; done
 for i in `ps auxwww | grep -i "Core Sync" | grep -v grep | grep -v "cleanUpAdobe" | tr -s " " | cut -d' ' -f2`; do ps auxwww -u $i | tail -n 1; done
+echo "*** end "
+echo "**************"
+
+echo "**************"
+echo "*** Listing lauch agents that might be relevant that are not removed "
+echo "*** begin "
+ls /Library/LaunchAgents | grep -i adobe
+ls ~/Library/LaunchAgents | grep -i adobe
+ls /Library/LaunchDaemons | grep -i adobe
 echo "*** end "
 echo "**************"
 
@@ -269,4 +159,6 @@ if compgen -G "/Library/LaunchAgents/com.adobe.*" > /dev/null; then
 	echo "*** end "
 	echo "**************"
 fi
+
+echo "Sleeping for 10 seconds"
 sleep 10
