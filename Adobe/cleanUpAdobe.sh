@@ -20,15 +20,39 @@ echo "**************"
 echo "*** Removing updaters from LaunchAgents"
 echo "*** begin "
 
-pushd .
+pushd . > /dev/null
 cd ~/Library/LaunchAgents
-for i in AAM ARM ARMDCHelper AdobeCreativeCloud GC; do echo "removing" `basename com.adobe.$i.* .plist`; launchctl remove `basename com.adobe.$i.* .plist`; rm com.adobe.$i.*;done
-popd 
+for i in AAM ARM ARMDCHelper AdobeCreativeCloud GC;
+	do 
+		if compgen -G `basename com.adobe.$i.* .plist` > /dev/null; then
+			# "Some files exist."
+			echo "removing" `basename com.adobe.$i.* .plist`;
+			launchctl remove `basename com.adobe.$i.* .plist`;
+			rm com.adobe.$i.*;
+		fi
+	done
+popd  > /dev/null
 
-pushd .
+pushd . > /dev/null
 cd /Library/LaunchAgents
-for i in AAM ARM ARMDCHelper AdobeCreativeCloud GC; do echo "removing" `basename com.adobe.$i.* .plist`; launchctl remove `basename com.adobe.$i.* .plist`; sudo rm com.adobe.$i.*;done
-popd 
+for i in AAM ARM ARMDCHelper AdobeCreativeCloud GC;
+	do 
+		if compgen -G `basename com.adobe.$i.* .plist` > /dev/null; then
+			# "Some files exist."
+			echo "removing" `basename com.adobe.$i.* .plist`;
+			launchctl remove `basename com.adobe.$i.* .plist`;
+			rm com.adobe.$i.*;
+		fi
+	done
+popd  > /dev/null
+
+echo "**************"
+echo "*** Removing items installed in launchctl"
+echo "*** begin "
+
+pushd . > /dev/null
+for i in `launchctl list | grep adobe | cut -f 3`; do echo $i; launchctl remove $i;done;
+popd > /dev/null
 
 
 echo "**************"
@@ -234,10 +258,15 @@ for i in `ps auxwww | grep -i "Core Sync" | grep -v grep | grep -v "cleanUpAdobe
 echo "*** end "
 echo "**************"
 
-echo "**************"
-echo "*** Consider editting any files below that have RunAtLoad true to RunAtLoad false "
-echo "*** begin "
-for i in `ls  /Library/LaunchAgents/com.adobe.*`;do echo;echo $i;grep -A 1 RunAtLoad $i;done
-echo "*** end "
-echo "**************"
+
+
+if compgen -G "/Library/LaunchAgents/com.adobe.*" > /dev/null; then
+	# "Some files exist."
+	echo "**************"
+	echo "*** Consider editting any files below that have RunAtLoad true to RunAtLoad false "
+	echo "*** begin "
+	for i in `ls  /Library/LaunchAgents/com.adobe.*`;do echo;echo $i;grep -A 1 RunAtLoad $i;done
+	echo "*** end "
+	echo "**************"
+fi
 sleep 10
