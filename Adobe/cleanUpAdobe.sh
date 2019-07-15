@@ -140,7 +140,7 @@ echo "*** end "
 echo "**************"
 
 echo "**************"
-echo "*** Listing lauch agents that might be relevant that are not removed "
+echo "*** Listing launch agents that might be relevant that are not removed "
 echo "*** begin "
 ls /Library/LaunchAgents | grep -i adobe
 ls ~/Library/LaunchAgents | grep -i adobe
