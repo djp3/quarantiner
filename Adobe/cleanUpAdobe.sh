@@ -36,7 +36,7 @@ echo "*** begin "
 
 pushd . > /dev/null
 cd ~/Library/LaunchAgents
-for i in AAM ARM ARMDCHelper AdobeCreativeCloud GC ARMDC agsservice;
+for i in AAM ARM ARMDCHelper AdobeCreativeCloud GC ARMDC agsservice ccxprocess acc.installer.v2;
 	do 
 		if compgen -G `basename com.adobe.$i.*.plist` > /dev/null; then
 			# "Some files exist."
@@ -55,7 +55,7 @@ popd  > /dev/null
 
 pushd . > /dev/null
 cd /Library/LaunchAgents
-for i in AAM ARM ARMDCHelper AdobeCreativeCloud GC ARMDC agsservice;
+for i in AAM ARM ARMDCHelper AdobeCreativeCloud GC ARMDC agsservice ccxprocess acc.installer.v2;
 	do 
 		if compgen -G `basename com.adobe.$i.*.plist` > /dev/null; then
 			# "Some files exist."
@@ -74,7 +74,7 @@ popd  > /dev/null
 
 pushd . > /dev/null
 cd /Library/LaunchDaemons
-for i in AAM ARM ARMDCHelper AdobeCreativeCloud GC ARMDC agsservice;
+for i in AAM ARM ARMDCHelper AdobeCreativeCloud GC ARMDC agsservice ccxprocess acc.installer.v2;
 	do 
 		if compgen -G `basename com.adobe.$i.*.plist` > /dev/null; then
 			# "Some files exist."
