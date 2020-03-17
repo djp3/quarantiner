@@ -24,10 +24,11 @@ echo "**** Rationale : https://medium.com/@jonathan.leitschuh/zoom-zero-day-4-mi
 echo "**************"
 echo "**** Disabling web applications "
 echo "*** begin "
-for i in "zoomus" "ringcentralopener"
+for i in "zoomus" "ringcentralopener" "zoom.us"
 	do
 		echo "Working on web application for $i"
 		rm -rf ~/.$i
+		#prevent it from doing anything new
 		touch ~/.$i && chmod 000 ~/.$i
 	done
 echo "*** end "
@@ -35,7 +36,7 @@ echo "**************"
 echo "**************"
 echo "Staged Kill"
 #List problematic apps
-for k in "ZoomCentral" "RingCentralOpener" "ZoomOpener.app";
+for k in "ZoomCentral" "RingCentralOpener" "ZoomOpener.app" "zoom.us";
 	do
 		echo "*** Targetting " $k
 		#Get PIDs
