@@ -107,7 +107,7 @@ popd > /dev/null
 
 echo "Staged Kill"
 #List problematic apps
-for k in "Adobe Acrobat.app" "AcroCEF helper.app" "AcroCEF.app" "AAM Updates Notifier.app" "Adobe Application Manager" "AdobeUpdaterStartupUtility" "com.adobe.ARMDC" "AGSService" "AGMService" "AdobeGCClient.app" "CS5ServiceManager.app" "Adobe Desktop Service" "Core Sync" "AdobeIPC" "Adobe Crash Reporter" "Adobe Creative Cloud.*js$" "Adobe Installer" "AdobeUpdateDaemon" "Acrobat Update Helper" "Adobe.Creative Cloud Libraries" "com.adobe.acc.installer.v2" "AdobeCrashReporter" "Adobe Creative Cloud Experience";
+for k in "Adobe Acrobat.app" "AcroCEF helper.app" "AcroCEF.app" "AAM Updates Notifier.app" "Adobe Application Manager" "AdobeExtensionsService" "Creative Cloud Helper" "AdobeUpdaterStartupUtility" "com.adobe.ARMDC" "AGSService" "AGMService" "AdobeGCClient.app" "CS5ServiceManager.app" "Adobe Desktop Service" "Core Sync" "AdobeIPC" "AdobeIPCBroker" "Adobe Crash Reporter" "Adobe Creative Cloud.*js$" "Adobe Installer" "AdobeUpdateDaemon" "Acrobat Update Helper" "Adobe.Creative Cloud Libraries" "com.adobe.acc.installer.v2" "AdobeCrashReporter" "Adobe Creative Cloud Experience";
 	do
 		echo "*** Targetting " $k
 		#Get PIDs
@@ -119,7 +119,7 @@ for k in "Adobe Acrobat.app" "AcroCEF helper.app" "AcroCEF.app" "AAM Updates Not
 				$SLEEP 5;
 
 				#Check to see if it's still going
-				for j in `ps auxwww $i | grep -v "^USER"`;
+				for j in `ps -p $i -o pid=`;
 					do	
 						echo -n "... Hard kill: " $j
 						$KILL -9 $i;
@@ -136,6 +136,7 @@ echo "*** Listing Processes that might be relevant that are still running"
 echo "*** begin "
 for i in `ps auxwww | grep -i "Adobe" | grep -v grep | grep -v "cleanUpAdobe" | tr -s " " | cut -d' ' -f2`; do ps auxwww -u $i | tail -n 1; done
 for i in `ps auxwww | grep -i "Core Sync" | grep -v grep | grep -v "cleanUpAdobe" | tr -s " " | cut -d' ' -f2`; do ps auxwww -u $i | tail -n 1; done
+for i in `ps auxwww | grep -i "Creative" | grep -v grep | grep -v "cleanUpAdobe" | tr -s " " | cut -d' ' -f2`; do ps auxwww -u $i | tail -n 1; done
 echo "*** end "
 echo "**************"
 
