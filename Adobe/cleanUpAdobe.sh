@@ -107,7 +107,7 @@ popd > /dev/null
 
 echo "Staged Kill"
 #List problematic apps
-for k in "Adobe Acrobat.app" "AcroCEF helper.app" "AcroCEF.app" "AAM Updates Notifier.app" "Adobe Application Manager" "AdobeExtensionsService" "Creative Cloud Helper" "AdobeUpdaterStartupUtility" "com.adobe.ARMDC" "AGSService" "AGMService" "AdobeGCClient.app" "CS5ServiceManager.app" "Adobe Desktop Service" "Core Sync" "AdobeIPC" "AdobeIPCBroker" "Adobe Crash Reporter" "Adobe Creative Cloud.*js$" "Adobe Installer" "AdobeUpdateDaemon" "Acrobat Update Helper" "Adobe.Creative Cloud Libraries" "com.adobe.acc.installer.v2" "AdobeCrashReporter" "Adobe Creative Cloud Experience";
+for k in "Adobe Photoshop" "Adobe Spaces" "Adobe Acrobat.app" "AcroCEF helper.app" "AcroCEF.app" "AAM Updates Notifier.app" "Adobe Application Manager" "AdobeExtensionsService" "Creative Cloud Helper" "AdobeUpdaterStartupUtility" "com.adobe.ARMDC" "AGSService" "AGMService" "AdobeGCClient.app" "CS5ServiceManager.app" "Adobe Desktop Service" "Core Sync" "AdobeIPC" "AdobeIPCBroker" "Adobe Crash Reporter" "Adobe Creative Cloud.*js$" "Adobe Installer" "AdobeUpdateDaemon" "Acrobat Update Helper" "Adobe.Creative Cloud Libraries" "com.adobe.acc.installer.v2" "AdobeCrashReporter" "Adobe Creative Cloud Experience";
 	do
 		echo "*** Targetting " $k
 		#Get PIDs
