@@ -33,6 +33,22 @@ for i in "zoomus" "ringcentralopener" "zoom.us"
 	done
 echo "*** end "
 echo "**************"
+
+echo "**************"
+echo "*** Removing items installed in launchctl with us.zoom name"
+echo "*** begin "
+
+pushd . > /dev/null
+for i in `launchctl list | grep us\.zoom | cut -f 3`;
+	do 
+		echo $i;
+		launchctl remove $i;
+	done;
+popd > /dev/null
+
+
+
+
 echo "**************"
 echo "Staged Kill"
 #List problematic apps
