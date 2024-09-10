@@ -64,7 +64,7 @@ for k in "ZoomCentral" "RingCentralOpener" "ZoomOpener.app" "zoom.us";
 				$SLEEP 5;
 
 				#Check to see if it's still going
-				for j in `ps auxwww $i | grep -v "^USER"`;
+				for j in `ps -p $i -o pid=`;
 					do	
 						echo -n "... Hard kill: " $j
 						$KILL -9 $i;
